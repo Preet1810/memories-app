@@ -11,7 +11,15 @@ export const api=createApi({
             query: () => `/`,
             providesTags: ["Posts"]
         }),
-    })
+        createPost: build.mutation({
+            query: (post) => ({
+                url: '/',
+                method: 'POST',
+                body: post,
+            }),
+            invalidatesTags: ['Posts'],
+        })
+    }),
 })
 
-export const { useGetPostsQuery }=api
+export const { useGetPostsQuery, useCreatePostMutation }=api
