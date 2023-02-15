@@ -1,11 +1,17 @@
 import mongoose from 'mongoose';
+const Schema=mongoose.Schema;
 
-const postSchema=mongoose.Schema({
+const ImageSchema=new Schema({
+    url: String,
+    filename: String
+});
+
+const postSchema=new Schema({
     title: String,
     message: String,
     creator: String,
     tags: [String],
-    selectedFile: String,
+    selectedFile: [ImageSchema],
     likeCount: {
         type: Number,
         default: 0,
