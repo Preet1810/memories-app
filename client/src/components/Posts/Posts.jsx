@@ -1,19 +1,12 @@
 import React from 'react';
 import { useGetPostsQuery } from '../../state/api';
-import { styled } from '@mui/material/styles';
-import Card from '@mui/material/Card';
-import CardHeader from '@mui/material/CardHeader';
-import CardMedia from '@mui/material/CardMedia';
-import CardContent from '@mui/material/CardContent';
-import CardActions from '@mui/material/CardActions';
-import Avatar from '@mui/material/Avatar';
-import IconButton from '@mui/material/IconButton';
+import { styled, Card, CardHeader, CardMedia, CardContent, CardActions, Avatar, IconButton, CircularProgress, Grid, } from '@mui/material';
 import Typography from '@mui/material/Typography';
 import { red } from '@mui/material/colors';
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import DeleteIcon from '@mui/icons-material/Delete';
-import CircularProgress from '@mui/material/CircularProgress';
-import { Grid } from '@mui/material';
+import EditIcon from '@mui/icons-material/Edit';
+import { Link } from 'react-router-dom';
 
 const StyledGrid=styled(Grid)({
     paddingLeft: "1rem",
@@ -63,9 +56,18 @@ const Posts=() => {
                                 </Avatar>
                             }
                             action={
-                                <IconButton aria-label="settings">
-                                    <DeleteIcon />
-                                </IconButton>
+                                <div>
+                                    <Link to={`/edit/${post._id}`}>
+                                        <IconButton aria-label="edit">
+                                            <EditIcon />
+                                        </IconButton>
+                                    </Link>
+                                    <Link to={`/delete/${post.id}`}>
+                                        <IconButton aria-label="delete">
+                                            <DeleteIcon />
+                                        </IconButton>
+                                    </Link>
+                                </div>
                             }
                             title={post.creator}
                             subheader={new Date(post.createdAt).toDateString()}

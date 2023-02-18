@@ -42,6 +42,21 @@ export const createPost=async (req, res) => {
     }
 };
 
+export const getEditForm=async (req, res) => {
+    const { id }=req.params;
+    console.log(id)
+    try {
+        const post=await PostMessage.findById(id);
+        if (!post) {
+            return res.status(404).send(`No post with id: ${id}`);
+        }
+        console.log(post)
+        res.status(200).json(post);
+    } catch (error) {
+        res.status(500).send(error.message);
+    }
+}
+
 
 export const updatePost=async (req, res) => {
     const { id: _id }=req.params;

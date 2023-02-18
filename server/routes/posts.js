@@ -1,5 +1,5 @@
 import express from 'express';
-import { getPosts, createPost, updatePost } from '../controllers/posts.js';
+import { getPosts, createPost, updatePost, getEditForm } from '../controllers/posts.js';
 const router=express.Router();
 import multer from 'multer';
 
@@ -10,6 +10,7 @@ const upload=multer({ storage });
 
 router.get('/', getPosts)
 router.post('/', upload.single('selectedFile'), createPost);
-router.patch('/:id', updatePost);
+router.get('/edit/:id', getEditForm)
+router.patch('edit/:id', updatePost);
 
 export default router;

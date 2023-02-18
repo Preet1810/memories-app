@@ -3,6 +3,7 @@ import { BrowserRouter, Link, Route, Routes } from 'react-router-dom';
 import Layout from "./components/Layout/Layout";
 import Posts from "./components/Posts/Posts";
 import Form from "./components/Form/Form"
+import Edit from "./components/Edit/Edit";
 
 function App() {
     return (
@@ -11,6 +12,7 @@ function App() {
                 <Routes>
                     <Route path="/" element={<Posts />} />
                     <Route path="/createPost" element={<Form />} />
+                    <Route path="/edit/:id" element={<Edit />} />
                 </Routes>
             </Layout>
         </BrowserRouter>
