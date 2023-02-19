@@ -11,6 +11,6 @@ const upload=multer({ storage });
 router.get('/', getPosts)
 router.post('/', upload.single('selectedFile'), createPost);
 router.get('/edit/:id', getEditForm)
-router.patch('edit/:id', updatePost);
+router.patch('/edit/:id', upload.single('selectedFile'), updatePost);
 
 export default router;

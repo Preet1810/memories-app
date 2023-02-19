@@ -9,7 +9,6 @@ import { useGetEditFormQuery } from '../../state/api';
 const Edit=() => {
     const { id }=useParams();
     const { data, isloading }=useGetEditFormQuery(id)
-    // // const history=useHistory();
     const [Load, setLoad]=useState(false);
     const [postData, setPostData]=useState({ creator: '', title: '', message: '', tags: '', selectedFile: '' });
     const [isError, setIsError]=useState(false);

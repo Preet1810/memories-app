@@ -19,23 +19,30 @@ export const getPosts=async (req, res) => {
 
 export const createPost=async (req, res) => {
     const { title, message, creator, tags }=req.body;
-    try {
-        // Upload file to Cloudinary
-        const result=await cloudinary.uploader.upload(req.file.path);
+    console.log(req.file)
 
-        // Create new post message
-        const newPostMessage=new PostMessage({
-            title,
-            message,
-            creator,
-            tags,
-            selectedFile: {
-                url: result.secure_url,
-                filename: result.public_id
-            }
-        });
-        await newPostMessage.save();
-        res.status(201).json(newPostMessage);
+    // console.log(req.file);
+    try {
+        if (req.file) {
+            const { path, filename }=req.file;
+
+            // Create new post message
+            const newPostMessage=new PostMessage({
+                title,
+                message,
+                creator,
+                tags,
+                selectedFile: {
+                    url: path,
+                    filename: filename,
+                },
+
+            });
+
+            await newPostMessage.save();
+
+            res.status(201).json(newPostMessage);
+        }
     } catch (error) {
         console.log(error);
         res.status(409).json({ message: error.message });
@@ -44,13 +51,13 @@ export const createPost=async (req, res) => {
 
 export const getEditForm=async (req, res) => {
     const { id }=req.params;
-    console.log(id)
+    // console.log(id)
     try {
         const post=await PostMessage.findById(id);
         if (!post) {
             return res.status(404).send(`No post with id: ${id}`);
         }
-        console.log(post)
+        // console.log(post)
         res.status(200).json(post);
     } catch (error) {
         res.status(500).send(error.message);
@@ -59,14 +66,50 @@ export const getEditForm=async (req, res) => {
 
 
 export const updatePost=async (req, res) => {
-    const { id: _id }=req.params;
-    const { title, message, creator, selectedFile, tags }=req.body;
+    const { id }=req.params;
 
-    if (!mongoose.Types.ObjectId.isValid(id)) return res.status(404).send(`No post with id: ${id}`);
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+        return res.status(404).send(`No post with id: ${id}`);
+    }
 
-    const updatedPost={ creator, title, message, tags, selectedFile, _id: id };
+    try {
+        const post=await PostMessage.findById(id);
+        // console.log(post)
+        if (!post) {
+            return res.status(404).send(`No post with id: ${id}`);
+        }
+        // console.log(req.body)
+        const updatedPost={
+            ...post._doc, // Include all properties of the original post
+            ...req.body, // Overwrite any properties with values from the edit form
+        };
 
-    await PostMessage.findByIdAndUpdate(id, updatedPost, { new: true });
+        if (req.file) {
 
-    res.json(updatedPost);
+            const { path, filename }=req.file;
+            updatedPost.selectedFile={
+                url: path,
+                filename: filename
+            };
+            // Delete previous file if it exists
+            const publicId=post.selectedFile[0].filename
+            await cloudinary.uploader.destroy(publicId);
+
+        }
+        // Loop through each property in req.body
+        for (const [key, value] of Object.entries(req.body)) {
+            // If the value is empty, set it to the corresponding value in the original post
+            if (value==='') {
+                updatedPost[key]=post[key];
+            }
+        }
+        const updated=await PostMessage.findByIdAndUpdate(id, updatedPost, {
+            new: true
+        });
+
+        res.status(200).json(updated);
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({ message: error.message });
+    }
 }

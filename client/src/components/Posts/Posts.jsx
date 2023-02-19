@@ -42,61 +42,64 @@ const StyledCardContent=styled(CardContent)({
 
 const Posts=() => {
     const { data, isLoading }=useGetPostsQuery();
-    return isLoading? (
-        <CircularProgress />
-    ):(
-        <StyledGrid container spacing={2} sx={{ marginTop: "5rem" }}>
-            {data.map((post) => (
-                <Grid item xs={12} sm={6} md={4} key={post._id}>
-                    <StyledCard>
-                        <StyledCardHeader
-                            avatar={
-                                <Avatar sx={{ bgcolor: red[500] }} aria-label="recipe">
-                                    {post.creator.charAt(0).toUpperCase()}
-                                </Avatar>
-                            }
-                            action={
-                                <div>
-                                    <Link to={`/edit/${post._id}`}>
-                                        <IconButton aria-label="edit">
-                                            <EditIcon />
-                                        </IconButton>
-                                    </Link>
-                                    <Link to={`/delete/${post.id}`}>
-                                        <IconButton aria-label="delete">
-                                            <DeleteIcon />
-                                        </IconButton>
-                                    </Link>
-                                </div>
-                            }
-                            title={post.creator}
-                            subheader={new Date(post.createdAt).toDateString()}
-                        />
-                        <StyledCardMedia
-                            component="img"
-                            src={post.selectedFile[0].url}
-                            alt={post.title}
+    return (
+        <div>
+            {isLoading? (<div>Loading... </div>):data? (
+                <StyledGrid container spacing={2} sx={{ marginTop: "5rem" }}>
+                    {data.map((post) => (
+                        <Grid item xs={12} sm={6} md={4} key={post._id}>
+                            <StyledCard>
+                                <StyledCardHeader
+                                    avatar={
+                                        <Avatar sx={{ bgcolor: red[500] }} aria-label="recipe">
+                                            {post.creator.charAt(0).toUpperCase()}
+                                        </Avatar>
+                                    }
+                                    action={
+                                        <div>
+                                            <Link to={`/edit/${post._id}`}>
+                                                <IconButton aria-label="edit">
+                                                    <EditIcon />
+                                                </IconButton>
+                                            </Link>
+                                            <Link to={`/delete/${post.id}`}>
+                                                <IconButton aria-label="delete">
+                                                    <DeleteIcon />
+                                                </IconButton>
+                                            </Link>
+                                        </div>
+                                    }
+                                    title={post.creator}
+                                    subheader={new Date(post.createdAt).toDateString()}
+                                />
+                                <StyledCardMedia
+                                    component="img"
+                                    src={post.selectedFile[0].url}
+                                    alt={post.title}
 
-                        />
-                        <StyledCardContent>
-                            <Typography className={post.title} gutterBottom variant="h5" component="h2">{post.title}</Typography>
-                            <Typography variant="body2" color="text.secondary">
-                                {post.message}
-                            </Typography>
-                            <Typography variant="body2" color="textSecondary" component="h2">{post.tags.map((tag) => `#${tag} `)}</Typography>
-                        </StyledCardContent>
-                        <CardActions disableSpacing>
-                            <IconButton aria-label="add to favorites" sx={{ marginTop: "-1.5rem" }}>
-                                <FavoriteIcon sx={{ color: 'red' }} />
-                            </IconButton>
-                            <Typography variant="body2" color="text.secondary" sx={{ marginTop: "-1.5rem" }}>
-                                {post.likeCount}
-                            </Typography>
-                        </CardActions>
-                    </StyledCard>
-                </Grid>
-            ))}
-        </StyledGrid>
+                                />
+                                <StyledCardContent>
+                                    <Typography className={post.title} gutterBottom variant="h5" component="h2">{post.title}</Typography>
+                                    <Typography variant="body2" color="text.secondary">
+                                        {post.message}
+                                    </Typography>
+                                    <Typography variant="body2" color="textSecondary" component="h2">{post.tags.map((tag) => `#${tag} `)}</Typography>
+                                </StyledCardContent>
+                                <CardActions disableSpacing>
+                                    <IconButton aria-label="add to favorites" sx={{ marginTop: "-1.5rem" }}>
+                                        <FavoriteIcon sx={{ color: 'red' }} />
+                                    </IconButton>
+                                    <Typography variant="body2" color="text.secondary" sx={{ marginTop: "-1.5rem" }}>
+                                        {post.likeCount}
+                                    </Typography>
+                                </CardActions>
+                            </StyledCard>
+                        </Grid>
+                    ))}
+                </StyledGrid>
+            ):(<div>No data available</div>)}
+
+        </div>
     );
 };
 
