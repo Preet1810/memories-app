@@ -6,8 +6,8 @@ import { red } from '@mui/material/colors';
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
-import { Link } from 'react-router-dom';
-
+import { Link, useNavigate } from 'react-router-dom';
+import axios from 'axios';
 const StyledGrid=styled(Grid)({
     paddingLeft: "1rem",
     paddingRight: "1rem",
@@ -40,7 +40,18 @@ const StyledCardContent=styled(CardContent)({
     flexGrow: 1,
 });
 
+
 const Posts=() => {
+    const navigate=useNavigate();
+    const handleDelete=async (postId) => {
+        try {
+            await axios.delete(`http://localhost:5000/posts/${postId}`);
+            navigate('/')
+            window.location.reload();
+        } catch (error) {
+            console.error(error);
+        }
+    };
     const { data, isLoading }=useGetPostsQuery();
     return (
         <div>
@@ -62,8 +73,8 @@ const Posts=() => {
                                                     <EditIcon />
                                                 </IconButton>
                                             </Link>
-                                            <Link to={`/delete/${post.id}`}>
-                                                <IconButton aria-label="delete">
+                                            <Link>
+                                                <IconButton aria-label="delete" onClick={() => handleDelete(post._id)}>
                                                     <DeleteIcon />
                                                 </IconButton>
                                             </Link>
@@ -97,7 +108,9 @@ const Posts=() => {
                         </Grid>
                     ))}
                 </StyledGrid>
-            ):(<div>No data available</div>)}
+
+            ):(<div>No data available</div>)
+            }
 
         </div>
     );

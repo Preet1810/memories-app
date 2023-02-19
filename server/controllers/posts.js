@@ -113,3 +113,21 @@ export const updatePost=async (req, res) => {
         res.status(500).json({ message: error.message });
     }
 }
+
+export const deletePost=async (req, res) => {
+    const { id }=req.params;
+    try {
+        const post=await PostMessage.findById(id);
+        if (!post) {
+            return res.status(404).json({ message: 'Post not found' });
+        }
+        const publicId=post.selectedFile[0].filename
+        console.log(publicId)
+        await cloudinary.uploader.destroy(publicId);
+        await post.remove();
+        res.json({ message: 'Post deleted successfully' });
+    } catch (error) {
+        res.status(500).json({ message: 'Something went wrong' });
+    }
+
+}

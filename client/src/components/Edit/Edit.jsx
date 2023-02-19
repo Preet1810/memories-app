@@ -3,11 +3,11 @@ import { Box, TextField, Card, CardContent, CardMedia, Typography, Alert } from 
 import friends from "../../Images/friends.png"
 import LoadingButton from '@mui/lab/LoadingButton';
 import axios from 'axios';
-import { styled } from '@mui/material/styles';
 import { useParams } from 'react-router-dom';
 import { useGetEditFormQuery } from '../../state/api';
 const Edit=() => {
     const { id }=useParams();
+
     const { data, isloading }=useGetEditFormQuery(id)
     const [Load, setLoad]=useState(false);
     const [postData, setPostData]=useState({ creator: '', title: '', message: '', tags: '', selectedFile: '' });
@@ -78,6 +78,8 @@ const Edit=() => {
                             </Box>
                         </form>
                     </CardContent>
+                    {isError&&<Alert severity="error" sx={{ marginTop: "1rem" }}>Please Fill All Inputs</Alert>}
+                    {isSuccess&&<Alert severity="success" sx={{ marginTop: "1rem" }}>Memory Updated Succesfully</Alert>}
                 </Card>
             ):(<div>No data available</div>)}
 
