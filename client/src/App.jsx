@@ -4,6 +4,7 @@ import Layout from "./components/Layout/Layout";
 import Posts from "./components/Posts/Posts";
 import Form from "./components/Form/Form"
 import Edit from "./components/Edit/Edit";
+import Auth from "./components/Auth/Auth"
 
 function App() {
     return (
@@ -13,6 +14,7 @@ function App() {
                     <Route path="/" element={<Posts />} />
                     <Route path="/createPost" element={<Form />} />
                     <Route path="/edit/:id" element={<Edit />} />
+                    <Route path="/auth" element={<Auth />} />
                 </Routes>
             </Layout>
         </BrowserRouter>

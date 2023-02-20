@@ -5,11 +5,13 @@ import AdbIcon from '@mui/icons-material/Adb';
 import Grid from '@mui/material/Unstable_Grid2';
 // import Posts from '../Posts/Posts';
 // import Form from './components/Form/Form';
+import { Link } from "react-router-dom";
 
 
 function Navbar() {
-    const pages=['Products', 'Pricing', 'Blog'];
-    const settings=['Profile', 'Account', 'Dashboard', 'Logout'];
+    const pages=['Posts', 'Create Post', 'Signup'];
+    const links=['/', '/createPost', '/auth'];
+    const settings=['Profile', 'Account', 'Dashboard', 'Signup'];
     const [anchorElNav, setAnchorElNav]=useState(null);
     const [anchorElUser, setAnchorElUser]=useState(null);
     const handleOpenNavMenu=(event) => {
@@ -83,9 +85,11 @@ function Navbar() {
                                     display: { xs: 'block', md: 'none' },
                                 }}
                             >
-                                {pages.map((page) => (
+                                {pages.map((page, index) => (
                                     <MenuItem key={page} onClick={handleCloseNavMenu}>
-                                        <Typography textAlign="center" >{page}</Typography>
+                                        <Link to={links[index]} style={{ textDecoration: 'none' }}>
+                                            <Typography textAlign="center">{page}</Typography>
+                                        </Link>
                                     </MenuItem>
                                 ))}
                             </Menu>
@@ -110,11 +114,13 @@ function Navbar() {
                             LOGO
                         </Typography>
                         <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
-                            {pages.map((page) => (
+                            {pages.map((page, index) => (
                                 <Button
                                     key={page}
                                     onClick={handleCloseNavMenu}
                                     sx={{ my: 2, color: 'white', display: 'block' }}
+                                    component={Link}
+                                    to={links[index]}
                                 >
                                     {page}
                                 </Button>
