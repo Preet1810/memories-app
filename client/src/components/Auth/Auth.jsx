@@ -1,43 +1,62 @@
 import React, { useState } from 'react';
+import { useEffect } from "react";
+import axios from 'axios';
 import {
     Card,
     CardContent,
     TextField,
     Button,
-    Typography, Avatar
+    Typography, Avatar, Alert
 } from '@mui/material';
-
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
-
+import { useNavigate } from 'react-router-dom';
 const Auth=() => {
+    const [Load, setLoad]=useState(false)
+    const [isError, setIsError]=useState(false);
+    const [isSuccess, setSuccess]=useState(false)
+    const [postData, setPostData]=useState({ email: '', password: '', username: '' });
     const [showSignup, setShowSignup]=useState(false);
-    const [email, setEmail]=useState('');
-    const [password, setPassword]=useState('');
-    const [name, setName]=useState('');
-    const [repeatPassword, setRepeatPassword]=useState('');
-
-    const handleEmailChange=(event) => {
-        setEmail(event.target.value);
-    };
-
-    const handlePasswordChange=(event) => {
-        setPassword(event.target.value);
-    };
-
-    const handleNameChange=(event) => {
-        setName(event.target.value);
-    };
-
-    const handleRepeatPasswordChange=(event) => {
-        setRepeatPassword(event.target.value);
-    };
+    const [errorMessage, setErrorMessage]=useState('');
 
     const handleSignInClick=() => {
         // TODO: handle sign in logic
-    };
 
-    const handleSignUpClick=() => {
-        // TODO: handle sign up logic
+    };
+    const navigate=useNavigate()
+    const handleSignUpClick=async (event) => {
+        event.preventDefault();
+
+        setLoad(true);
+        setSuccess(false);
+        setIsError(false);
+        try {
+            const formData=new FormData();
+            formData.append('email', postData.email);
+            formData.append('password', postData.password);
+            formData.append('username', postData.username);
+            const config={
+                headers: {
+                    'Content-Type': 'multipart/form-data',
+                },
+            };
+
+            const response=await axios.post('http://localhost:5000/user/register', formData, config);
+            setLoad(false);
+            setSuccess(true);
+            setPostData({
+                email: '',
+                password: '',
+                username: '',
+            });
+            setErrorMessage(response.data.message)
+            navigate('/')
+        } catch (error) {
+            console.log(error);
+            setLoad(false);
+            setIsError(true);
+            setErrorMessage(error.response.data.message);
+
+        }
     };
 
     const handleToggleSignupClick=() => {
@@ -46,8 +65,9 @@ const Auth=() => {
 
     const cardTitle=showSignup? 'Sign Up':'Sign In';
     const cardActionLabel=showSignup? 'Already have an account?':"Don't have an account?";
-
+    // console.log(postData)
     return (
+
         <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
             <Card sx={{ width: '20rem' }}>
                 <CardContent>
@@ -59,35 +79,43 @@ const Auth=() => {
                             {cardTitle}
                         </Typography>
                     </div>
-                    <TextField
-                        label="Email"
-                        value={email}
-                        onChange={handleEmailChange}
-                        fullWidth
-                        margin="normal"
-                    />
-                    <TextField
-                        label="Password"
-                        type="password"
-                        value={password}
-                        onChange={handlePasswordChange}
-                        fullWidth
-                        margin="normal"
-                    />
-                    {showSignup&&(
+                    {!showSignup&&(
                         <>
                             <TextField
-                                label="Name"
-                                value={name}
-                                onChange={handleNameChange}
+                                label="Email"
+                                type="email"
+                                onChange={(e) => setPostData({ ...postData, email: e.target.value })}
                                 fullWidth
                                 margin="normal"
                             />
                             <TextField
-                                label="Repeat Password"
+                                label="Password"
                                 type="password"
-                                value={repeatPassword}
-                                onChange={handleRepeatPasswordChange}
+                                onChange={(e) => setPostData({ ...postData, password: e.target.value })}
+                                fullWidth
+                                margin="normal"
+                            />
+                        </>
+                    )}
+                    {showSignup&&(
+                        <>
+                            <TextField
+                                label="Username"
+                                onChange={(e) => setPostData({ ...postData, username: e.target.value })}
+                                fullWidth
+                                margin="normal"
+                            />
+                            <TextField
+                                label="Email"
+                                type="email"
+                                onChange={(e) => setPostData({ ...postData, email: e.target.value })}
+                                fullWidth
+                                margin="normal"
+                            />
+                            <TextField
+                                label="Password"
+                                type="password"
+                                onChange={(e) => setPostData({ ...postData, password: e.target.value })}
                                 fullWidth
                                 margin="normal"
                             />
@@ -96,8 +124,16 @@ const Auth=() => {
                     <Button variant="contained" color="primary" sx={{ marginTop: "1rem" }} onClick={showSignup? handleSignUpClick:handleSignInClick}>
                         {cardTitle}
                     </Button>
+                    {/* <Button variant="contained" color="primary" sx={{ marginTop: "1rem", display: 'flex', flexDirection: 'column' }}>
+                        Sign in with Google
+                    </Button>
+                    <Button variant="contained" color="primary" sx={{ marginTop: "1rem", display: 'flex', flexDirection: 'column' }}>
+                        Logout in with Google
+                    </Button> */}
                     <Button onClick={handleToggleSignupClick} sx={{ marginTop: "0.5rem" }}>{cardActionLabel}</Button>
                 </CardContent>
+                {isError&&<Alert severity="error" sx={{ marginBottom: "1rem" }}>{errorMessage}</Alert>}
+                {isSuccess&&<Alert severity="success" sx={{ marginBottom: "1rem" }}>{errorMessage}</Alert>}
             </Card>
         </div>
     );

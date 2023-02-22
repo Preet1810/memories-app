@@ -4,7 +4,7 @@ import friends from "../../Images/friends.png"
 import LoadingButton from '@mui/lab/LoadingButton';
 import axios from 'axios';
 import { styled } from '@mui/material/styles';
-
+import { Navigate } from "react-router-dom";
 const Form=() => {
     const [Load, setLoad]=useState(false)
     const [postData, setPostData]=useState({ creator: '', title: '', message: '', tags: '', selectedFile: '' });

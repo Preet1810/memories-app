@@ -1,10 +1,6 @@
-import express from 'express';
 import mongoose from 'mongoose';
-import multer from 'multer';
 import PostMessage from '../models/postMessage.js';
 import { cloudinary, storage } from '../cloudinary/index.js';
-
-const upload=multer({ storage });
 
 export const getPosts=async (req, res) => {
     try {

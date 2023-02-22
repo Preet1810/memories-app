@@ -7,13 +7,16 @@ import Grid from '@mui/material/Unstable_Grid2';
 // import Form from './components/Form/Form';
 import { Link } from "react-router-dom";
 
-
 function Navbar() {
     const pages=['Posts', 'Create Post', 'Signup'];
     const links=['/', '/createPost', '/auth'];
     const settings=['Profile', 'Account', 'Dashboard', 'Signup'];
     const [anchorElNav, setAnchorElNav]=useState(null);
     const [anchorElUser, setAnchorElUser]=useState(null);
+
+    // if (isAuthenticated) {
+    //     pages.splice(2, 1, 'Logout');
+    // }
     const handleOpenNavMenu=(event) => {
         setAnchorElNav(event.currentTarget);
     };
