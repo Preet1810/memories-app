@@ -5,9 +5,9 @@ import {
     Card,
     CardContent,
     TextField,
-    Button,
-    Typography, Avatar, Alert
+    Typography, Avatar, Alert, Button
 } from '@mui/material';
+import LoadingButton from '@mui/lab/LoadingButton';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import { useNavigate } from 'react-router-dom';
 const Auth=() => {
@@ -17,12 +17,38 @@ const Auth=() => {
     const [postData, setPostData]=useState({ email: '', password: '', username: '' });
     const [showSignup, setShowSignup]=useState(false);
     const [errorMessage, setErrorMessage]=useState('');
-
-    const handleSignInClick=() => {
-        // TODO: handle sign in logic
-
-    };
     const navigate=useNavigate()
+    const handleSignInClick=async (event) => {
+        event.preventDefault();
+        setLoad(true);
+        setSuccess(false);
+        setIsError(false);
+        try {
+            const formData=new FormData();
+            formData.append('username', postData.username);
+            formData.append('password', postData.password);
+            const config={
+                headers: {
+                    'Content-Type': 'multipart/form-data',
+                    'withCredentials': 'true',
+                },
+            };
+            const response=await axios.post('http://localhost:5000/user/login', formData, config);
+            setLoad(false);
+            setSuccess(true);
+            setPostData({
+                username: '',
+                password: '',
+            });
+            setErrorMessage(response.data.message)
+            navigate('/')
+        } catch (error) {
+            setLoad(false);
+            setIsError(true);
+            setErrorMessage('Username Or Password Incorrect');
+        }
+    };
+
     const handleSignUpClick=async (event) => {
         event.preventDefault();
 
@@ -37,6 +63,7 @@ const Auth=() => {
             const config={
                 headers: {
                     'Content-Type': 'multipart/form-data',
+                    'withCredentials': 'true',
                 },
             };
 
@@ -51,7 +78,6 @@ const Auth=() => {
             setErrorMessage(response.data.message)
             navigate('/')
         } catch (error) {
-            console.log(error);
             setLoad(false);
             setIsError(true);
             setErrorMessage(error.response.data.message);
@@ -82,9 +108,8 @@ const Auth=() => {
                     {!showSignup&&(
                         <>
                             <TextField
-                                label="Email"
-                                type="email"
-                                onChange={(e) => setPostData({ ...postData, email: e.target.value })}
+                                label="Username"
+                                onChange={(e) => setPostData({ ...postData, username: e.target.value })}
                                 fullWidth
                                 margin="normal"
                             />
@@ -121,9 +146,9 @@ const Auth=() => {
                             />
                         </>
                     )}
-                    <Button variant="contained" color="primary" sx={{ marginTop: "1rem" }} onClick={showSignup? handleSignUpClick:handleSignInClick}>
+                    <LoadingButton variant="contained" color="primary" sx={{ marginTop: "1rem" }} loading={Load} onClick={showSignup? handleSignUpClick:handleSignInClick}>
                         {cardTitle}
-                    </Button>
+                    </LoadingButton>
                     {/* <Button variant="contained" color="primary" sx={{ marginTop: "1rem", display: 'flex', flexDirection: 'column' }}>
                         Sign in with Google
                     </Button>

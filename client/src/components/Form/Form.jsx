@@ -10,7 +10,7 @@ const Form=() => {
     const [postData, setPostData]=useState({ creator: '', title: '', message: '', tags: '', selectedFile: '' });
     const [isError, setIsError]=useState(false);
     const [isSuccess, setSuccess]=useState(false)
-
+    const [message, setMessage]=useState('');
     const handleSubmit=async (event) => {
         event.preventDefault();
         setLoad(true);
@@ -42,10 +42,12 @@ const Form=() => {
                 tags: '',
                 selectedFile: '',
             });
+            setMessage('Memory Created Succesfully')
         } catch (error) {
             console.log(error);
             setLoad(false);
             setIsError(true);
+            setMessage(error.response.data)
         }
 
     };
@@ -72,8 +74,8 @@ const Form=() => {
                             <LoadingButton variant="contained" type="submit" loading={Load} color="primary" size="large" sx={{ width: '70%', marginTop: "0.5rem", background: "#AA3333" }}>Submit</LoadingButton>
                         </Box>
                     </form>
-                    {isError&&<Alert severity="error" sx={{ marginTop: "1rem" }}>Please Fill All Inputs</Alert>}
-                    {isSuccess&&<Alert severity="success" sx={{ marginTop: "1rem" }}>Memory Created Succesfully</Alert>}
+                    {isError&&<Alert severity="error" sx={{ marginTop: "1rem" }}>{message}</Alert>}
+                    {isSuccess&&<Alert severity="success" sx={{ marginTop: "1rem" }}>{message}</Alert>}
                 </CardContent>
             </Card>
         </div>

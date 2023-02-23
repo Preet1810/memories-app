@@ -5,6 +5,9 @@ import Posts from "./components/Posts/Posts";
 import Form from "./components/Form/Form"
 import Edit from "./components/Edit/Edit";
 import Auth from "./components/Auth/Auth"
+import axios from "axios"
+
+axios.defaults.withCredentials=true;
 
 function App() {
     return (

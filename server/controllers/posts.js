@@ -15,8 +15,6 @@ export const getPosts=async (req, res) => {
 
 export const createPost=async (req, res) => {
     const { title, message, creator, tags }=req.body;
-    console.log(req.file)
-
     // console.log(req.file);
     try {
         if (req.file) {
