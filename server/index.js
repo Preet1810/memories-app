@@ -26,6 +26,7 @@ app.use(cors(
         credentials: true,
     }
 ));
+app.use(cookieParser("Asecret"));
 // app.use(helmet());
 // app.use(helmet.crossOriginResourcePolicy({ policy: "cross-origin" }));
 // const MongoStore=connectMongo(session);
@@ -38,17 +39,17 @@ const sessionConfig={
     // cookie: { secure: true }
     // store: MongoStore.create({ mongoUrl: process.env.MONGO_URL }),
     cookie: {
-        secure: false,
+        secure: false, //set secure to true in production
         expires: Date.now()+1000*60*60*24*7,     //will be expired in 7 days
         maxAge: 1000*60*60*24*7,
-        // sameSite: 'none',
+        // sameSite: 'none', //set this in production
     }
 }
 
 // app.set('trust proxy', 1) // trust first proxy
 app.use(session(sessionConfig))
 
-app.use(cookieParser("Asecret"));
+
 
 
 app.use(passport.initialize());

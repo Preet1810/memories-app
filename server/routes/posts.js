@@ -10,8 +10,8 @@ const upload=multer({ storage });
 
 
 router.get('/', getPosts)
-router.post('/', upload.single('selectedFile'), isLoggedin, createPost);
-router.get('/edit/:id', getEditForm)
+router.post('/', isLoggedin, upload.single('selectedFile'), createPost);
+router.get('/edit/:id', isLoggedin, getEditForm)
 router.patch('/edit/:id', upload.single('selectedFile'), updatePost);
 router.delete('/:id', isLoggedin, deletePost);
 
